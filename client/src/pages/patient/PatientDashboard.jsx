@@ -2,6 +2,7 @@ import PageContainer from '../../components/PageContainer';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import AIAssistantPanel from '../../components/AIAssistantPanel';
 
 export default function PatientDashboard() {
   const [loading, setLoading] = useState(false);
@@ -46,6 +47,7 @@ export default function PatientDashboard() {
         {tempId && <p className="mt-2 text-xs text-slate-500">Temporary patient ID: {tempId}</p>}
         <Link to="/complete-later" className="mt-3 inline-block text-sm text-brand-600">Complete Registration Later</Link>
       </div>
+      <AIAssistantPanel />
       <div className="card">
         <h3 className="font-semibold">Health Snapshot</h3>
         <ul className="mt-3 space-y-2 text-sm text-slate-600">
