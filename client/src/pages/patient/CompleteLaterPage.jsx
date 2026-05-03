@@ -1,3 +1,4 @@
+import PageContainer from '../../components/PageContainer';
 import { useState } from 'react';
 import { api } from '../../services/api';
 
@@ -16,6 +17,7 @@ export default function CompleteLaterPage() {
   };
 
   return (
+    <PageContainer>
     <section className="mx-auto max-w-2xl card">
       <h2 className="mb-4 text-xl font-semibold">Complete Registration After Stabilization</h2>
       <form className="grid gap-3 md:grid-cols-2" onSubmit={submit}>
@@ -31,5 +33,6 @@ export default function CompleteLaterPage() {
       </form>
       {message && <p className="mt-3 text-sm text-slate-600">{message}</p>}
     </section>
+    </PageContainer>
   );
 }

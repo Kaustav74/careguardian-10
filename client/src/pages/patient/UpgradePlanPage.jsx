@@ -1,3 +1,4 @@
+import PageContainer from '../../components/PageContainer';
 import { useState } from 'react';
 import { api } from '../../services/api';
 import { useAuthStore } from '../../contexts/authStore';
@@ -23,6 +24,7 @@ export default function UpgradePlanPage() {
   };
 
   return (
+    <PageContainer>
     <section className="mx-auto max-w-2xl card">
       <h2 className="text-2xl font-semibold">Upgrade Plan</h2>
       <p className="mt-2 text-slate-600">Premium includes priority emergency handling and Hospital on Wheels access.</p>
@@ -34,5 +36,6 @@ export default function UpgradePlanPage() {
       </div>
       {message && <p className="mt-3 text-sm text-slate-600">{message}</p>}
     </section>
+    </PageContainer>
   );
 }

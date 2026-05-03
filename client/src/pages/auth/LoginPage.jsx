@@ -1,3 +1,4 @@
+import PageContainer from '../../components/PageContainer';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
@@ -9,6 +10,7 @@ export default function LoginPage() {
   };
 
   return (
+    <PageContainer>
     <section className="mx-auto max-w-md card">
       <h1 className="mb-1 text-2xl font-semibold">Patient Login</h1>
       <p className="mb-6 text-sm text-slate-500">Access emergency-ready healthcare in seconds.</p>
@@ -19,5 +21,6 @@ export default function LoginPage() {
       </form>
       <p className="mt-4 text-sm">No account? <Link to="/signup" className="text-brand-600">Create one</Link></p>
     </section>
+    </PageContainer>
   );
 }

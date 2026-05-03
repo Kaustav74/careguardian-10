@@ -1,3 +1,4 @@
+import PageContainer from '../../components/PageContainer';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
@@ -33,6 +34,7 @@ export default function PatientDashboard() {
   };
 
   return (
+    <PageContainer>
     <section className="grid gap-4 md:grid-cols-3">
       <div className="card md:col-span-2">
         <h2 className="text-xl font-semibold">Emergency SOS</h2>
@@ -53,5 +55,6 @@ export default function PatientDashboard() {
         </ul>
       </div>
     </section>
+    </PageContainer>
   );
 }

@@ -1,5 +1,7 @@
+import PageContainer from '../../components/PageContainer';
 export default function ProfilePage() {
   return (
+    <PageContainer>
     <section className="mx-auto max-w-2xl card">
       <h2 className="mb-4 text-xl font-semibold">Medical Profile</h2>
       <form className="grid gap-4 md:grid-cols-2">
@@ -10,5 +12,6 @@ export default function ProfilePage() {
         <button className="btn-primary md:col-span-2">Save Profile</button>
       </form>
     </section>
+    </PageContainer>
   );
 }

@@ -1,3 +1,4 @@
+import PageContainer from '../../components/PageContainer';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignupPage() {
@@ -8,6 +9,7 @@ export default function SignupPage() {
   };
 
   return (
+    <PageContainer>
     <section className="mx-auto max-w-md card">
       <h1 className="mb-1 text-2xl font-semibold">Create Account</h1>
       <p className="mb-6 text-sm text-slate-500">Start your CareGuardian journey.</p>
@@ -18,5 +20,6 @@ export default function SignupPage() {
         <button className="btn-primary w-full">Sign Up</button>
       </form>
     </section>
+    </PageContainer>
   );
 }

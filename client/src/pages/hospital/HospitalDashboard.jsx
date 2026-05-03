@@ -1,3 +1,4 @@
+import PageContainer from '../../components/PageContainer';
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { api } from '../../services/api';
@@ -34,6 +35,7 @@ export default function HospitalDashboard() {
   };
 
   return (
+    <PageContainer>
     <section className="card">
       <h2 className="text-xl font-semibold">Incoming Emergency Requests</h2>
       <div className="mt-4 space-y-3">
@@ -52,5 +54,6 @@ export default function HospitalDashboard() {
         ))}
       </div>
     </section>
+    </PageContainer>
   );
 }
