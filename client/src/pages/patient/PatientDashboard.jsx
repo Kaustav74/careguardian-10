@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
 
 export default function PatientDashboard() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [tempId, setTempId] = useState('');
 
   const getLocation = () =>
     new Promise((resolve) => {
@@ -21,6 +23,7 @@ export default function PatientDashboard() {
     try {
       const location = await getLocation();
       const { data } = await api.post('/emergencies', { location, severity: 'high' });
+      if (data.temporaryPatientId) setTempId(data.temporaryPatientId);
       setMessage(`Emergency created and assigned to ${data.hospital?.name || 'nearest hospital'}.`);
     } catch (error) {
       setMessage('Failed to send SOS. Please retry.');
@@ -38,6 +41,8 @@ export default function PatientDashboard() {
           {loading ? 'Sending SOS...' : 'SOS - Request Immediate Help'}
         </button>
         {message && <p className="mt-3 text-sm text-slate-600">{message}</p>}
+        {tempId && <p className="mt-2 text-xs text-slate-500">Temporary patient ID: {tempId}</p>}
+        <Link to="/complete-later" className="mt-3 inline-block text-sm text-brand-600">Complete Registration Later</Link>
       </div>
       <div className="card">
         <h3 className="font-semibold">Health Snapshot</h3>

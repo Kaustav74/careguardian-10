@@ -4,6 +4,7 @@ const links = [
   { to: '/dashboard', label: 'Patient Dashboard' },
   { to: '/profile', label: 'Profile' },
   { to: '/hospitals', label: 'Hospitals' },
+  { to: '/complete-later', label: 'Complete Later' },
   { to: '/hospital/dashboard', label: 'Hospital Admin' },
 ];
 

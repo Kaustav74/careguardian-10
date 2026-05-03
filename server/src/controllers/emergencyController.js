@@ -5,6 +5,7 @@ const EmergencyRequest = require('../models/EmergencyRequest');
 const Hospital = require('../models/Hospital');
 const User = require('../models/User');
 const { analyzeSymptoms } = require('../services/aiService');
+const TemporaryPatient = require('../models/TemporaryPatient');
 
 const distance = (a, b) => {
   const dx = (a?.lat || 0) - (b?.lat || 0);
@@ -47,8 +48,19 @@ exports.createEmergency = async (req, res) => {
   });
 
   const populated = await emergency.populate(['patient', 'hospital']);
-  if (io) io.emit('emergency:new', populated);
-  res.status(201).json(populated);
+
+  let temporaryPatient = null;
+  if (!userId) {
+    temporaryPatient = await TemporaryPatient.create({
+      alias: `Temp-${Date.now().toString().slice(-5)}`,
+      emergencyRequest: emergency._id,
+      hospital: nearestHospital?._id,
+    });
+  }
+
+  const payload = { ...populated.toObject(), temporaryPatientId: temporaryPatient?._id };
+  if (io) io.emit('emergency:new', payload);
+  res.status(201).json(payload);
 };
 
 exports.getEmergencies = async (_req, res) => {
