@@ -88,5 +88,8 @@ exports.updateEmergencyStatus = async (req, res) => {
     eventBus.emit('emergency_accepted', emergency);
     dispatchAmbulance({ emergencyId: emergency._id, start: emergency.location || { lat: 28.61, lng: 77.2 } });
   }
+  if (status === 'rejected') {
+    eventBus.emit('emergency_rejected', emergency);
+  }
   return res.json(emergency);
 };

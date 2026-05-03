@@ -49,6 +49,7 @@ app.use('/api/hospitals', hospitalRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/hospital-ops', hospitalOpsRoutes);
 app.use('/api/telemedicine', telemedicineRoutes);
+app.use('/api/appointments', telemedicineRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/generated', express.static(require('path').join(__dirname, 'generated')));
 app.use('/api/rural', ruralRoutes);
