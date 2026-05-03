@@ -81,3 +81,24 @@ docker compose up --build
 - Required GitHub Secrets:
   - `RENDER_DEPLOY_HOOK_URL`
   - `VERCEL_DEPLOY_HOOK_URL`
+
+
+
+### Render (Docker) Quick Deploy
+
+This repo includes a Render-specific Dockerfile at project root:
+
+- `Dockerfile.render`
+
+Render service settings:
+- Environment: `Docker`
+- Dockerfile Path: `Dockerfile.render`
+- Port: `5000`
+
+Required environment variables on Render:
+- `PORT=5000`
+- `MONGO_URI=...`
+- `JWT_SECRET=...`
+- `CORS_ORIGIN=...`
+- `GROQ_API_KEY=...` (optional)
+

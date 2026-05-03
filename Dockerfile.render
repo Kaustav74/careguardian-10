@@ -1,0 +1,16 @@
+# Render deployment Dockerfile (backend API)
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install only server dependencies
+COPY server/package*.json ./server/
+RUN npm --prefix ./server ci --omit=dev
+
+# Copy server source
+COPY server ./server
+
+ENV NODE_ENV=production
+EXPOSE 5000
+
+CMD ["node", "server/src/index.js"]
