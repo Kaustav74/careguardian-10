@@ -4,8 +4,12 @@ const emergencyRequestSchema = new mongoose.Schema(
   {
     patient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     hospital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital' },
-    status: { type: String, enum: ['pending', 'assigned', 'resolved'], default: 'pending' },
+    status: { type: String, enum: ['pending', 'accepted', 'rejected', 'resolved'], default: 'pending' },
     severity: { type: String, enum: ['low', 'medium', 'high'], default: 'high' },
+    location: {
+      lat: Number,
+      lng: Number,
+    },
   },
   { timestamps: true }
 );

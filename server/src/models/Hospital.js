@@ -6,6 +6,10 @@ const hospitalSchema = new mongoose.Schema(
     city: { type: String, required: true },
     contactNumber: String,
     emergencyCapacity: { type: Number, default: 0 },
+    location: {
+      lat: { type: Number, default: 0 },
+      lng: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );

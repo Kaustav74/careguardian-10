@@ -44,3 +44,10 @@ Server runs on `http://localhost:5000` and frontend on Vite default `http://loca
 - JWT auth (`/api/auth/signup`, `/api/auth/login`)
 - Mongoose models: `User`, `Hospital`, `EmergencyRequest`
 - Modular layout: config/controllers/models/routes
+
+
+## Emergency Flow (MVP+)
+- Patient SOS button now creates a real emergency request via backend API.
+- Browser geolocation is used with a fallback mock Delhi location.
+- Backend assigns nearest hospital from seeded hospitals by simple distance logic.
+- Hospital dashboard polls every 4 seconds and supports Accept/Reject actions.
