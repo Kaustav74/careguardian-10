@@ -1,6 +1,10 @@
+let io = null;
+exports.setSocketServer = (socketServer) => { io = socketServer; };
+
 const EmergencyRequest = require('../models/EmergencyRequest');
 const Hospital = require('../models/Hospital');
 const User = require('../models/User');
+const { analyzeSymptoms } = require('../services/aiService');
 
 const distance = (a, b) => {
   const dx = (a?.lat || 0) - (b?.lat || 0);
@@ -18,7 +22,7 @@ const assignNearestHospital = async (location) => {
 };
 
 exports.createEmergency = async (req, res) => {
-  const { userId, severity = 'high', location } = req.body;
+  const { userId, severity = 'high', location, symptoms, age, history } = req.body;
 
   let patient = null;
   if (userId) patient = await User.findById(userId);
@@ -26,17 +30,24 @@ exports.createEmergency = async (req, res) => {
     patient = await User.findOne({ email: 'demo.patient@careguardian.app' });
   }
 
+  let computedSeverity = severity;
+  if (symptoms) {
+    const analysis = await analyzeSymptoms({ symptoms, age, history });
+    computedSeverity = analysis.severity || severity;
+  }
+
   const nearestHospital = await assignNearestHospital(location);
 
   const emergency = await EmergencyRequest.create({
     patient: patient._id,
     hospital: nearestHospital?._id,
-    severity,
+    severity: computedSeverity,
     location,
     status: 'pending',
   });
 
   const populated = await emergency.populate(['patient', 'hospital']);
+  if (io) io.emit('emergency:new', populated);
   res.status(201).json(populated);
 };
 
@@ -50,5 +61,6 @@ exports.updateEmergencyStatus = async (req, res) => {
   const { status } = req.body;
   const emergency = await EmergencyRequest.findByIdAndUpdate(id, { status }, { new: true }).populate(['patient', 'hospital']);
   if (!emergency) return res.status(404).json({ message: 'Emergency not found' });
+  if (io) io.emit('emergency:updated', emergency);
   return res.json(emergency);
 };

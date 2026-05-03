@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { api } from '../../services/api';
+
+const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
 
 export default function HospitalDashboard() {
   const [requests, setRequests] = useState([]);
@@ -11,13 +14,23 @@ export default function HospitalDashboard() {
 
   useEffect(() => {
     fetchRequests();
-    const id = setInterval(fetchRequests, 4000);
-    return () => clearInterval(id);
+
+    socket.on('emergency:new', (payload) => {
+      setRequests((prev) => [payload, ...prev]);
+    });
+
+    socket.on('emergency:updated', (payload) => {
+      setRequests((prev) => prev.map((item) => (item._id === payload._id ? payload : item)));
+    });
+
+    return () => {
+      socket.off('emergency:new');
+      socket.off('emergency:updated');
+    };
   }, []);
 
   const updateStatus = async (id, status) => {
     await api.patch(`/emergencies/${id}/status`, { status });
-    fetchRequests();
   };
 
   return (
