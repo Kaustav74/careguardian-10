@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const emergencyRoutes = require('./routes/emergencyRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const hospitalRoutes = require('./routes/hospitalRoutes');
 const seedBaseData = require('./services/seedService');
 const { setSocketServer } = require('./controllers/emergencyController');
 
@@ -27,6 +28,7 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/emergencies', emergencyRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/hospitals', hospitalRoutes);
 
 io.on('connection', (socket) => {
   socket.emit('connected', { ok: true, message: 'CareGuardian realtime connected' });
