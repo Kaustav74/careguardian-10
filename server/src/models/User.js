@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     bloodGroup: String,
     allergies: String,
     conditions: String,
+    subscription: { type: String, enum: ['free', 'premium'], default: 'free' },
   },
   { timestamps: true }
 );

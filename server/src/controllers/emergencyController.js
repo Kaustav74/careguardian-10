@@ -45,6 +45,7 @@ exports.createEmergency = async (req, res) => {
     severity: computedSeverity,
     location,
     status: 'pending',
+    priority: patient.subscription === 'premium' ? 1 : 0,
   });
 
   const populated = await emergency.populate(['patient', 'hospital']);
@@ -64,7 +65,7 @@ exports.createEmergency = async (req, res) => {
 };
 
 exports.getEmergencies = async (_req, res) => {
-  const emergencies = await EmergencyRequest.find().populate(['patient', 'hospital']).sort({ createdAt: -1 });
+  const emergencies = await EmergencyRequest.find().populate(['patient', 'hospital']).sort({ priority: -1, createdAt: -1 });
   res.json(emergencies);
 };
 

@@ -6,6 +6,7 @@ import PatientDashboard from './pages/patient/PatientDashboard';
 import ProfilePage from './pages/patient/ProfilePage';
 import HospitalListPage from './pages/patient/HospitalListPage';
 import CompleteLaterPage from './pages/patient/CompleteLaterPage';
+import UpgradePlanPage from './pages/patient/UpgradePlanPage';
 import HospitalLoginPage from './pages/hospital/HospitalLoginPage';
 import HospitalDashboard from './pages/hospital/HospitalDashboard';
 
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/hospitals" element={<HospitalListPage />} />
           <Route path="/complete-later" element={<CompleteLaterPage />} />
+          <Route path="/upgrade-plan" element={<UpgradePlanPage />} />
           <Route path="/hospital/login" element={<HospitalLoginPage />} />
           <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
         </Routes>

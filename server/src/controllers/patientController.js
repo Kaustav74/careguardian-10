@@ -36,3 +36,11 @@ exports.upgradeTemporaryPatient = async (req, res) => {
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
   res.json({ token, user, upgradedFromTemporaryId: temp._id });
 };
+
+exports.updateSubscription = async (req, res) => {
+  const { userId, plan } = req.body;
+  if (!['free', 'premium'].includes(plan)) return res.status(400).json({ message: 'Invalid plan' });
+  const user = await User.findByIdAndUpdate(userId, { subscription: plan }, { new: true });
+  if (!user) return res.status(404).json({ message: 'User not found' });
+  return res.json({ id: user._id, subscription: user.subscription });
+};
