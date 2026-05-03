@@ -10,7 +10,7 @@ export default function HospitalDashboard() {
 
   const fetchRequests = async () => {
     const { data } = await api.get('/emergencies');
-    setRequests(data);
+    setRequests(data.data || data);
   };
 
   useEffect(() => {

@@ -1,3 +1,5 @@
+const { getPagination } = require('../services/paginationService');
+const { listHospitals } = require('../services/hospitalService');
 const Hospital = require('../models/Hospital');
 
 const distance = (a, b) => {
@@ -8,7 +10,8 @@ const distance = (a, b) => {
 
 exports.getHospitals = async (req, res) => {
   const { userLat, userLng, maxDistanceKm, costCategory, hasIcu, minBeds } = req.query;
-  const hospitals = await Hospital.find().lean();
+  const { page, limit, skip } = getPagination(req.query);
+  const hospitals = await listHospitals();
 
   const userLoc = userLat && userLng ? { lat: Number(userLat), lng: Number(userLng) } : { lat: 28.6139, lng: 77.2090 };
 
@@ -23,5 +26,6 @@ exports.getHospitals = async (req, res) => {
   });
 
   filtered.sort((a, b) => a.distanceKm - b.distanceKm);
-  res.json(filtered);
+  const paginated = filtered.slice(skip, skip + limit);
+  res.json({ page, limit, data: paginated, total: filtered.length });
 };

@@ -19,7 +19,7 @@ export default function HospitalListPage() {
 
   useEffect(() => {
     setLoading(true);
-    api.get(`/hospitals?${query}`).then(({ data }) => setHospitals(data)).finally(() => setLoading(false));
+    api.get(`/hospitals?${query}`).then(({ data }) => setHospitals(data.data || data)).finally(() => setLoading(false));
   }, [query]);
 
   return (

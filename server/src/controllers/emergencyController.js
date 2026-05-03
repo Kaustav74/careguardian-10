@@ -6,6 +6,8 @@ const Hospital = require('../models/Hospital');
 const User = require('../models/User');
 const { analyzeSymptoms } = require('../services/aiService');
 const TemporaryPatient = require('../models/TemporaryPatient');
+const { getPagination } = require('../services/paginationService');
+const { listEmergencies } = require('../services/emergencyService');
 
 const distance = (a, b) => {
   const dx = (a?.lat || 0) - (b?.lat || 0);
@@ -64,9 +66,10 @@ exports.createEmergency = async (req, res) => {
   res.status(201).json(payload);
 };
 
-exports.getEmergencies = async (_req, res) => {
-  const emergencies = await EmergencyRequest.find().populate(['patient', 'hospital']).sort({ priority: -1, createdAt: -1 });
-  res.json(emergencies);
+exports.getEmergencies = async (req, res) => {
+  const { page, limit, skip } = getPagination(req.query);
+  const emergencies = await listEmergencies({ skip, limit });
+  res.json({ page, limit, data: emergencies });
 };
 
 exports.updateEmergencyStatus = async (req, res) => {

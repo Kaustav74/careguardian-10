@@ -9,11 +9,16 @@ const emergencyRoutes = require('./routes/emergencyRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const hospitalRoutes = require('./routes/hospitalRoutes');
 const patientRoutes = require('./routes/patientRoutes');
-const seedBaseData = require('./services/seedService');
 const { setSocketServer } = require('./controllers/emergencyController');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const hpp = require('hpp');
+const errorHandler = require('./middleware/errorHandler');
+const logger = require('./utils/logger');
 
 dotenv.config();
-connectDB().then(seedBaseData);
+connectDB();
 
 const app = express();
 const server = http.createServer(app);
@@ -22,7 +27,11 @@ const io = new Server(server, {
 });
 setSocketServer(io);
 
-app.use(cors());
+app.use(helmet());
+app.use(cors({ origin: (process.env.CORS_ORIGIN || '*').split(','), methods: ['GET','POST','PATCH','PUT','DELETE'] }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 200 }));
+app.use(mongoSanitize());
+app.use(hpp());
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
@@ -36,5 +45,7 @@ io.on('connection', (socket) => {
   socket.emit('connected', { ok: true, message: 'CareGuardian realtime connected' });
 });
 
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server running on ${PORT}`));
+server.listen(PORT, () => logger.info({ message: `Server running on ${PORT}` }));
