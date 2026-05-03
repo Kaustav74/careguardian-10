@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import SkeletonCard from './components/SkeletonCard';
@@ -19,11 +19,22 @@ const AIAssistantPage = lazy(() => import('./pages/patient/AIAssistantPage'));
 const UpgradePlanPage = lazy(() => import('./pages/patient/UpgradePlanPage'));
 
 export default function App() {
-  const hydrateAuth = useAuthStore((s) => s.hydrateAuth);
   const loadingUser = useAuthStore((s) => s.loadingUser);
+  const hasHydrated = useRef(false);
 
-  useEffect(() => { hydrateAuth(); }, [hydrateAuth]);
-  if (loadingUser) return <div className="p-6 text-sm text-slate-500">Loading session...</div>;
+  useEffect(() => {
+    if (hasHydrated.current) return;
+    hasHydrated.current = true;
+    useAuthStore.getState().hydrateAuth();
+  }, []);
+
+  if (loadingUser) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="text-sm text-slate-500">Restoring session...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
