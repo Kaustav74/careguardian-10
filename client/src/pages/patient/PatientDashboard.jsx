@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
 import AIAssistantPanel from '../../components/AIAssistantPanel';
+import { useAuthStore } from '../../contexts/authStore';
 
 export default function PatientDashboard() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [tempId, setTempId] = useState('');
+  const user = useAuthStore((st) => st.user);
 
   const getLocation = () =>
     new Promise((resolve) => {
@@ -39,6 +41,7 @@ export default function PatientDashboard() {
     <section className="grid gap-4 md:grid-cols-3">
       <div className="card md:col-span-2">
         <h2 className="text-xl font-semibold">Emergency SOS</h2>
+        <p className='text-sm text-slate-500'>Welcome, {user?.name || 'User'}</p>
         <p className="mt-2 text-slate-500">Trigger immediate emergency coordination.</p>
         <button onClick={handleSOS} disabled={loading} className="mt-6 w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-semibold text-white shadow-soft hover:bg-red-600 disabled:opacity-60">
           {loading ? 'Sending SOS...' : 'SOS - Request Immediate Help'}

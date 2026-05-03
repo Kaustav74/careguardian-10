@@ -1,18 +1,13 @@
 import { NavLink } from 'react-router-dom';
+import { useAuthStore } from '../contexts/authStore';
 
-const links = [
-  ['Dashboard', '/dashboard'],
-  ['Profile', '/profile'],
-  ['Hospitals', '/hospitals'],
-  ['Upgrade', '/upgrade-plan'],
-  ['Telemedicine', '/telemedicine'],
-  ['Complete Later', '/complete-later'],
-  ['Hospital Admin', '/hospital/dashboard'],
-  ['Doctor Dashboard', '/doctor/dashboard'],
-  ['Rural Outreach', '/rural-outreach'],
-];
+const patientLinks = [['Dashboard','/dashboard'],['Hospitals','/hospitals'],['Telemedicine','/telemedicine'],['Profile','/profile']];
+const doctorLinks = [['Doctor Dashboard','/doctor/dashboard']];
+const adminLinks = [['Hospital Admin','/hospital/dashboard']];
 
 export default function Sidebar() {
+  const role = useAuthStore((s) => s.role) || 'patient';
+  const links = role === 'doctor' ? doctorLinks : role === 'admin' ? adminLinks : patientLinks;
   return (
     <aside className="hidden w-64 shrink-0 border-r border-white/40 bg-white/70 p-5 backdrop-blur-xl lg:block">
       <p className="mb-8 text-lg font-semibold tracking-tight text-slate-900">CareGuardian</p>

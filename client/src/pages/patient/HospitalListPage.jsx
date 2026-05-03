@@ -36,7 +36,9 @@ export default function HospitalListPage() {
         </aside>
         <div className="space-y-4 md:col-span-3">
           <h2 className="text-2xl font-semibold tracking-tight">Nearby Hospitals {isFetching && <span className="text-xs text-slate-500">Updating…</span>}</h2>
-          <div className="grid gap-4 md:grid-cols-2">{isLoading ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />) : hospitals.map((hospital) => <article key={hospital._id} className="card transition hover:-translate-y-0.5"><div className="flex items-start justify-between"><div><h3 className="text-lg font-semibold">{hospital.name}</h3><p className="text-sm text-slate-500">{hospital.city} · {hospital.distanceKm} km</p></div><span className="rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase">{hospital.costCategory}</span></div><div className="mt-4 grid grid-cols-2 gap-2 text-sm"><p>🛏️ Beds: <span className="font-medium">{hospital.availableBeds}</span></p><p>🏥 ICU: <span className="font-medium">{hospital.icuAvailable ? 'Yes' : 'No'}</span></p></div></article>)}</div>
+          <div className="grid gap-4 md:grid-cols-2">{isLoading ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />) : hospitals.map((hospital) => <article key={hospital._id} className="card transition hover:-translate-y-0.5"><div className="flex items-start justify-between"><div><h3 className="text-lg font-semibold">{hospital.name}</h3><p className="text-sm text-slate-500">{hospital.city} · {hospital.distanceKm} km</p></div><span className="rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase">{hospital.costCategory}</span></div><div className="mt-4 grid grid-cols-2 gap-2 text-sm"><p>🛏️ Beds: <span className="font-medium">{hospital.availableBeds}</span></p><p>🏥 ICU: <span className="font-medium">{hospital.icuAvailable ? 'Yes' : 'No'}</span></p></div></article>))}
+          {!isLoading && hospitals.length === 0 && <p className='text-sm text-slate-500'>No hospitals found for current filters.</p>}
+          </div>
         </div>
       </section>
     </PageContainer>

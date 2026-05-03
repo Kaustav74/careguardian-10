@@ -1,11 +1,19 @@
 import { create } from 'zustand';
-
-const demoPatient = { id: '', name: 'Riya Sharma', email: 'riya@example.com', subscription: 'free' };
+import { api } from '../services/api';
 
 export const useAuthStore = create((set) => ({
-  user: demoPatient,
-  role: 'patient',
-  setAuth: (user, role) => set({ user, role }),
-  setSubscription: (subscription) => set((state) => ({ user: { ...state.user, subscription } })),
-  logout: () => set({ user: null, role: null }),
+  user: null,
+  role: null,
+  token: localStorage.getItem('cg_token') || '',
+  loadingUser: false,
+  setAuth: async (token) => {
+    localStorage.setItem('cg_token', token);
+    set({ token, loadingUser: true });
+    const { data } = await api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } });
+    set({ user: data.user, role: data.user.role, loadingUser: false });
+  },
+  logout: () => {
+    localStorage.removeItem('cg_token');
+    set({ user: null, role: null, token: '' });
+  },
 }));
