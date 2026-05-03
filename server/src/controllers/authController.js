@@ -24,3 +24,9 @@ exports.login = async (req, res) => {
 
   return res.json({ token: signToken(user), user: { id: user._id, name: user.name, email: user.email, role: user.role } });
 };
+
+exports.me = async (req, res) => {
+  const user = await User.findById(req.user.id).select('-password').lean();
+  if (!user) return res.status(404).json({ message: 'User not found' });
+  return res.json({ user });
+};

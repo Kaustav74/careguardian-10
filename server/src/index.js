@@ -43,6 +43,7 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/emergencies', emergencyRoutes);
+app.use('/api/emergency', emergencyRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/hospitals', hospitalRoutes);
 app.use('/api/patients', patientRoutes);
