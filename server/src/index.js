@@ -16,6 +16,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
+const { initRealtime } = require('./services/realtimeService');
 
 dotenv.config();
 connectDB();
@@ -26,6 +27,7 @@ const io = new Server(server, {
   cors: { origin: '*' },
 });
 setSocketServer(io);
+initRealtime(io);
 
 app.use(helmet());
 app.use(cors({ origin: (process.env.CORS_ORIGIN || '*').split(','), methods: ['GET','POST','PATCH','PUT','DELETE'] }));
@@ -43,6 +45,7 @@ app.use('/api/patients', patientRoutes);
 
 io.on('connection', (socket) => {
   socket.emit('connected', { ok: true, message: 'CareGuardian realtime connected' });
+  socket.on('subscribe_emergency', (emergencyId) => socket.join(`emergency:${emergencyId}`));
 });
 
 app.use(errorHandler);

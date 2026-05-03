@@ -8,6 +8,8 @@ const { analyzeSymptoms } = require('../services/aiService');
 const TemporaryPatient = require('../models/TemporaryPatient');
 const { getPagination } = require('../services/paginationService');
 const { listEmergencies } = require('../services/emergencyService');
+const eventBus = require('../events/eventBus');
+const { dispatchAmbulance } = require('../services/realtimeService');
 
 const distance = (a, b) => {
   const dx = (a?.lat || 0) - (b?.lat || 0);
@@ -63,6 +65,7 @@ exports.createEmergency = async (req, res) => {
 
   const payload = { ...populated.toObject(), temporaryPatientId: temporaryPatient?._id };
   if (io) io.emit('emergency:new', payload);
+  eventBus.emit('emergency_created', payload);
   res.status(201).json(payload);
 };
 
@@ -78,5 +81,9 @@ exports.updateEmergencyStatus = async (req, res) => {
   const emergency = await EmergencyRequest.findByIdAndUpdate(id, { status }, { new: true }).populate(['patient', 'hospital']);
   if (!emergency) return res.status(404).json({ message: 'Emergency not found' });
   if (io) io.emit('emergency:updated', emergency);
+  if (status === 'accepted') {
+    eventBus.emit('emergency_accepted', emergency);
+    dispatchAmbulance({ emergencyId: emergency._id, start: emergency.location || { lat: 28.61, lng: 77.2 } });
+  }
   return res.json(emergency);
 };
