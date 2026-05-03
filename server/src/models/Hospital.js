@@ -7,6 +7,7 @@ const hospitalSchema = new mongoose.Schema(
     contactNumber: String,
     emergencyCapacity: { type: Number, default: 0 },
     availableBeds: { type: Number, default: 0, index: true },
+    occupiedBeds: { type: Number, default: 0 },
     icuAvailable: { type: Boolean, default: false, index: true },
     costCategory: { type: String, enum: ['low', 'medium', 'high'], default: 'medium', index: true },
     facilities: { type: [String], default: [] },

@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     allergies: String,
     conditions: String,
     subscription: { type: String, enum: ['free', 'premium'], default: 'free' },
+    hospitalRole: { type: String, enum: ['admin', 'staff', 'nurse'], default: 'staff' },
   },
   { timestamps: true }
 );

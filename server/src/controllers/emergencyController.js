@@ -10,6 +10,7 @@ const { getPagination } = require('../services/paginationService');
 const { listEmergencies } = require('../services/emergencyService');
 const eventBus = require('../events/eventBus');
 const { dispatchAmbulance } = require('../services/realtimeService');
+const { logAction } = require('../services/auditService');
 
 const distance = (a, b) => {
   const dx = (a?.lat || 0) - (b?.lat || 0);
@@ -27,7 +28,7 @@ const assignNearestHospital = async (location) => {
 };
 
 exports.createEmergency = async (req, res) => {
-  const { userId, severity = 'high', location, symptoms, age, history } = req.body;
+  const { userId, severity = 'high', location, symptoms, age, history, department='ER' } = req.body;
 
   let patient = null;
   if (userId) patient = await User.findById(userId);
@@ -49,7 +50,8 @@ exports.createEmergency = async (req, res) => {
     severity: computedSeverity,
     location,
     status: 'pending',
-    priority: patient.subscription === 'premium' ? 1 : 0,
+    priority: (patient.subscription === 'premium' ? 2 : 1) + (computedSeverity === 'critical' ? 2 : computedSeverity === 'high' ? 1 : 0),
+    department,
   });
 
   const populated = await emergency.populate(['patient', 'hospital']);
@@ -81,6 +83,7 @@ exports.updateEmergencyStatus = async (req, res) => {
   const emergency = await EmergencyRequest.findByIdAndUpdate(id, { status }, { new: true }).populate(['patient', 'hospital']);
   if (!emergency) return res.status(404).json({ message: 'Emergency not found' });
   if (io) io.emit('emergency:updated', emergency);
+  await logAction({ action: `emergency_${status}`, emergencyId: emergency._id, hospitalId: emergency.hospital?._id, metadata: { status } });
   if (status === 'accepted') {
     eventBus.emit('emergency_accepted', emergency);
     dispatchAmbulance({ emergencyId: emergency._id, start: emergency.location || { lat: 28.61, lng: 77.2 } });
