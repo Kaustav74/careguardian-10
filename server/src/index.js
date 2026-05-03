@@ -10,6 +10,7 @@ const aiRoutes = require('./routes/aiRoutes');
 const hospitalRoutes = require('./routes/hospitalRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const hospitalOpsRoutes = require('./routes/hospitalOpsRoutes');
+const telemedicineRoutes = require('./routes/telemedicineRoutes');
 const { setSocketServer } = require('./controllers/emergencyController');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -44,10 +45,13 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/hospitals', hospitalRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/hospital-ops', hospitalOpsRoutes);
+app.use('/api/telemedicine', telemedicineRoutes);
 
 io.on('connection', (socket) => {
   socket.emit('connected', { ok: true, message: 'CareGuardian realtime connected' });
   socket.on('subscribe_emergency', (emergencyId) => socket.join(`emergency:${emergencyId}`));
+  socket.on('join_consultation', (roomId) => socket.join(`consult:${roomId}`));
+  socket.on('consult_message', (payload) => io.to(`consult:${payload.roomId}`).emit('consult_message', payload));
 });
 
 app.use(errorHandler);

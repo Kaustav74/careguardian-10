@@ -5,6 +5,7 @@ const links = [
   ['Profile', '/profile'],
   ['Hospitals', '/hospitals'],
   ['Upgrade', '/upgrade-plan'],
+  ['Telemedicine', '/telemedicine'],
   ['Complete Later', '/complete-later'],
   ['Hospital Admin', '/hospital/dashboard'],
 ];

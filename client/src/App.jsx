@@ -7,6 +7,9 @@ import ProfilePage from './pages/patient/ProfilePage';
 import HospitalListPage from './pages/patient/HospitalListPage';
 import CompleteLaterPage from './pages/patient/CompleteLaterPage';
 import UpgradePlanPage from './pages/patient/UpgradePlanPage';
+import TelemedicinePage from './pages/patient/TelemedicinePage';
+import BookAppointmentPage from './pages/patient/BookAppointmentPage';
+import VideoConsultationPage from './pages/patient/VideoConsultationPage';
 import HospitalLoginPage from './pages/hospital/HospitalLoginPage';
 import HospitalDashboard from './pages/hospital/HospitalDashboard';
 
@@ -24,6 +27,9 @@ export default function App() {
           <Route path="/hospitals" element={<HospitalListPage />} />
           <Route path="/complete-later" element={<CompleteLaterPage />} />
           <Route path="/upgrade-plan" element={<UpgradePlanPage />} />
+          <Route path="/telemedicine" element={<TelemedicinePage />} />
+          <Route path="/telemedicine/book/:doctorId" element={<BookAppointmentPage />} />
+          <Route path="/telemedicine/call/:appointmentId" element={<VideoConsultationPage />} />
           <Route path="/hospital/login" element={<HospitalLoginPage />} />
           <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
         </Routes>
