@@ -12,6 +12,7 @@ import BookAppointmentPage from './pages/patient/BookAppointmentPage';
 import VideoConsultationPage from './pages/patient/VideoConsultationPage';
 import HospitalLoginPage from './pages/hospital/HospitalLoginPage';
 import HospitalDashboard from './pages/hospital/HospitalDashboard';
+import DoctorDashboardPage from './pages/hospital/DoctorDashboardPage';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/telemedicine/call/:appointmentId" element={<VideoConsultationPage />} />
           <Route path="/hospital/login" element={<HospitalLoginPage />} />
           <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
+          <Route path="/doctor/dashboard" element={<DoctorDashboardPage />} />
         </Routes>
       </main>
     </div>

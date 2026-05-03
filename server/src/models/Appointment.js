@@ -6,6 +6,10 @@ const appointmentSchema = new mongoose.Schema({
   slot: { type: String, required: true },
   status: { type: String, enum: ['booked', 'completed', 'cancelled'], default: 'booked' },
   videoRoomId: { type: String, required: true },
+  paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
+  amount: { type: Number, default: 0 },
+  prescriptionUrl: String,
+  consultationSummary: String,
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

@@ -8,6 +8,7 @@ const links = [
   ['Telemedicine', '/telemedicine'],
   ['Complete Later', '/complete-later'],
   ['Hospital Admin', '/hospital/dashboard'],
+  ['Doctor Dashboard', '/doctor/dashboard'],
 ];
 
 export default function Sidebar() {

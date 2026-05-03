@@ -6,6 +6,9 @@ const doctorSchema = new mongoose.Schema({
   available: { type: Boolean, default: true, index: true },
   rating: { type: Number, default: 4.5 },
   slots: { type: [String], default: [] },
+  verified: { type: Boolean, default: false, index: true },
+  consultationFee: { type: Number, default: 500 },
+  earningsTotal: { type: Number, default: 0 },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Doctor', doctorSchema);
