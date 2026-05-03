@@ -17,7 +17,10 @@ export default function LoginPage() {
     try {
       const { data } = await api.post('/auth/login', form);
       await setAuth(data.token);
-      navigate('/dashboard');
+      const nextRole = useAuthStore.getState().role;
+      if (nextRole === 'doctor') navigate('/doctor/dashboard');
+      else if (nextRole === 'admin') navigate('/hospital-admin');
+      else navigate('/dashboard');
     } catch (_e) {
       setError('Invalid login credentials');
     } finally { setLoading(false); }

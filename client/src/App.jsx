@@ -1,8 +1,9 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import SkeletonCard from './components/SkeletonCard';
 import { useAuthStore } from './contexts/authStore';
+import { ProtectedRoute, RoleProtectedRoute } from './components/ProtectedRoute';
 
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
@@ -14,14 +15,16 @@ const BookAppointmentPage = lazy(() => import('./pages/patient/BookAppointmentPa
 const VideoConsultationPage = lazy(() => import('./pages/patient/VideoConsultationPage'));
 const HospitalDashboard = lazy(() => import('./pages/hospital/HospitalDashboard'));
 const DoctorDashboardPage = lazy(() => import('./pages/hospital/DoctorDashboardPage'));
-
-const RequireRole = ({ roles, children }) => {
-  const role = useAuthStore((s) => s.role);
-  if (!role) return <Navigate to="/login" replace />;
-  return roles.includes(role) ? children : <Navigate to="/dashboard" replace />;
-};
+const AIAssistantPage = lazy(() => import('./pages/patient/AIAssistantPage'));
+const UpgradePlanPage = lazy(() => import('./pages/patient/UpgradePlanPage'));
 
 export default function App() {
+  const hydrateAuth = useAuthStore((s) => s.hydrateAuth);
+  const loadingUser = useAuthStore((s) => s.loadingUser);
+
+  useEffect(() => { hydrateAuth(); }, [hydrateAuth]);
+  if (loadingUser) return <div className="p-6 text-sm text-slate-500">Loading session...</div>;
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Sidebar />
@@ -31,14 +34,16 @@ export default function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/dashboard" element={<RequireRole roles={['patient','doctor','admin']}><PatientDashboard /></RequireRole>} />
-            <Route path="/profile" element={<RequireRole roles={['patient']}><ProfilePage /></RequireRole>} />
-            <Route path="/hospitals" element={<RequireRole roles={['patient']}><HospitalListPage /></RequireRole>} />
-            <Route path="/telemedicine" element={<RequireRole roles={['patient']}><TelemedicinePage /></RequireRole>} />
-            <Route path="/telemedicine/book/:doctorId" element={<RequireRole roles={['patient']}><BookAppointmentPage /></RequireRole>} />
-            <Route path="/telemedicine/call/:appointmentId" element={<RequireRole roles={['patient','doctor']}><VideoConsultationPage /></RequireRole>} />
-            <Route path="/hospital/dashboard" element={<RequireRole roles={['admin']}><HospitalDashboard /></RequireRole>} />
-            <Route path="/doctor/dashboard" element={<RequireRole roles={['doctor']}><DoctorDashboardPage /></RequireRole>} />
+            <Route path="/dashboard" element={<ProtectedRoute><PatientDashboard /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/hospitals" element={<ProtectedRoute><HospitalListPage /></ProtectedRoute>} />
+            <Route path="/telemedicine" element={<ProtectedRoute><TelemedicinePage /></ProtectedRoute>} />
+            <Route path="/telemedicine/book/:doctorId" element={<ProtectedRoute><BookAppointmentPage /></ProtectedRoute>} />
+            <Route path="/telemedicine/call/:appointmentId" element={<ProtectedRoute><VideoConsultationPage /></ProtectedRoute>} />
+            <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistantPage /></ProtectedRoute>} />
+            <Route path="/upgrade-plan" element={<ProtectedRoute><UpgradePlanPage /></ProtectedRoute>} />
+            <Route path="/hospital-admin" element={<RoleProtectedRoute roles={['admin']}><HospitalDashboard /></RoleProtectedRoute>} />
+            <Route path="/doctor/dashboard" element={<RoleProtectedRoute roles={['doctor']}><DoctorDashboardPage /></RoleProtectedRoute>} />
           </Routes>
         </Suspense>
       </main>
