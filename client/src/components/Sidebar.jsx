@@ -9,6 +9,7 @@ const links = [
   ['Complete Later', '/complete-later'],
   ['Hospital Admin', '/hospital/dashboard'],
   ['Doctor Dashboard', '/doctor/dashboard'],
+  ['Rural Outreach', '/rural-outreach'],
 ];
 
 export default function Sidebar() {
